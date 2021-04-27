@@ -9,23 +9,23 @@ const app = express();
 const router = require('./api/router');
 const {initDb} = require('./api/init/dbInit');
 
-initDb();
-
-
 app.use(cors());
 
 // Middlewares
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // for Passport:
 app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// app.options('*', cors());
 router(app);
 
-app.options('*', cors());
-
+//Error handler
+app.use((error, req, res, next) => {
+  return res.status(500).json({ error: error.toString() })
+});
 
 app.listen(4000);

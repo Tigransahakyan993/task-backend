@@ -9,7 +9,7 @@ const {userRole} = config;
 
 exports.logIn = async (req, res) => {
   const token = jwt.sign({payload: req.user}, 'secret');
-  res.status(200).json({token});
+  res.status(200).json({user: req.user, token});
 }
 
 exports.register = async (req, res) => {
@@ -25,4 +25,9 @@ exports.register = async (req, res) => {
     console.log(e);
     writeStatus(res, 401, {message: e.message});
   }
+}
+
+exports.getCurrentUser = (req, res) => {
+  console.log('req.user:::::::',req.user);
+  writeStatus(res, 401, {user: req.user});
 }

@@ -10,11 +10,13 @@ exports.toDto = (data) => {
 }
 
 exports.fromDto = (dto) => {
+  const role = Array.isArray(dto.role) ? dto.role[0] : dto.role
+
   return {
-    id: dto.id,
+    id: +dto.id,
     email: dto.email,
     first_name: dto.first_name,
     last_name: dto.last_name,
-    role: dto.role,
+    role: role,
   }
 }

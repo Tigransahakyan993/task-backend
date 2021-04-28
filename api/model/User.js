@@ -21,7 +21,7 @@ User.init({
     allowNull: false
   },
   role: {
-    type: Sequelize.ENUM('buyer', 'owner')
+    type: Sequelize.ENUM('buyer', 'owner', 'admin')
   }
 },
   {

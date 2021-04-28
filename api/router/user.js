@@ -21,7 +21,7 @@ user.get('/getCurrentUser',
 user.get('/:id',
   requireAuth,
   initRoleField,
-  authGuard.roles('owner', 'buyer', 'admin'),
+  authGuard.roles('admin'),
   userController.getUser
 )
 

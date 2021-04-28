@@ -17,7 +17,6 @@ class UserService extends BaseService{
       }
       try {
         const hashPassword = await bcrypt.hash(password, config.salt.saltRounds);
-        console.log('hashPassword',hashPassword);
         return super.create({...options, password: hashPassword})
       } catch (e) {
         console.log(e);

@@ -32,7 +32,6 @@ exports.createUser = async (req, res) => {
     const user = await serviceDecorator.create(userService, converter, data);
     writeStatus(res, 200, user);
   } catch (e) {
-    console.log('e.message',e.message);
     writeStatus(res, 401, {message: e.message});
   }
 }

@@ -1,31 +1,43 @@
 const express = require('express');
-const restaurantsController = require("../controller/restaurantController");
-const restaurants = express.Router();
 const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', {session: false});
 const authGuard = require('node-auth-guard');
-
-restaurants.use(requireAuth);
-restaurants.use(authGuard.initialize({rolesField: 'role'}));
+const restaurants = express.Router();
+const restaurantsController = require("../controller/restaurantController");
+const requireAuth = passport.authenticate('jwt', {session: false});
+const initFields = authGuard.initialize({rolesField: 'role'});
 
 restaurants.get('/',
-  authGuard.roles('owner'),
+  requireAuth,
+  initFields,
+  authGuard.roles('admin', 'owner', 'buyer'),
   restaurantsController.getAllRestaurants
 )
 
 restaurants.get('/:id',
+  requireAuth,
+  initFields,
+  authGuard.roles('admin', 'owner', 'buyer'),
   restaurantsController.getRestaurant
 )
 
 restaurants.post('/',
+  requireAuth,
+  initFields,
+  authGuard.roles('admin', 'owner'),
   restaurantsController.createRestaurant
 )
 
 restaurants.put('/:id',
+  requireAuth,
+  initFields,
+  authGuard.roles('admin', 'owner'),
   restaurantsController.updateRestaurant
 )
 
 restaurants.delete('/:id',
+  requireAuth,
+  initFields,
+  authGuard.roles('admin'),
   restaurantsController.deleteRestaurant
 )
 

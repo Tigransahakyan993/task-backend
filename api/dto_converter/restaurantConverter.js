@@ -6,7 +6,7 @@ exports.toDto = (data) => {
     id: data.id,
     name: data.name,
     description: data.description,
-    // userId: data.userId,
+    userId: data.userId,
   }
 }
 

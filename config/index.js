@@ -1,7 +1,8 @@
 module.exports = {
   userRole: {
     owner: 'owner',
-    buyer: 'buyer'
+    buyer: 'buyer',
+    admin: 'admin'
   },
   orderStatus: {
     placed: 'placed',

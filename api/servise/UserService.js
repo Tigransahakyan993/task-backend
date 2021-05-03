@@ -1,6 +1,5 @@
 const BaseService = require('./BaseServise')
 const User = require('../model/User')
-const jwt = require('jsonwebtoken')
 const config = require('../../config')
 const bcrypt = require('bcrypt');
 
@@ -18,11 +17,18 @@ class UserService extends BaseService{
       }
       try {
         const hashPassword = await bcrypt.hash(password, config.salt.saltRounds);
-        console.log('hashPassword',hashPassword);
         return super.create({...options, password: hashPassword})
       } catch (e) {
         console.log(e);
       }
+  }
+
+  async getById(id) {
+    const user = await User.findByPk(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user;
   }
 }
 

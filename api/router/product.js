@@ -4,11 +4,6 @@ const products = express.Router();
 const passport = require('passport');
 // const requireAuth = passport.authenticate('jwt', {session: false});
 
-products.use(function timeLog(req, res, next) {
-  console.log('Time: ', Date.now());
-  next();
-})
-
 products.get('/',
   productController.getAllProducts
 )

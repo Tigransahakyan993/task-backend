@@ -1,8 +1,8 @@
-const {userRole}  = require("../../../my-app/src/config");
+const {userRole} = require("../../config");
 
 exports.toDto = (data) => {
   const roles = ['buyer', 'owner'];
-  const role = roles.includes(data.role) ? data.role : userRole.buyer
+  const role = roles.includes(data.role) ? data.role : userRole.buyer;
 
   return {
     email: data.email,
@@ -14,13 +14,11 @@ exports.toDto = (data) => {
 }
 
 exports.fromDto = (dto) => {
-  const role = Array.isArray(dto.role) ? dto.role[0] : dto.role
+  const fields = ['id', 'email', 'first_name', 'last_name', 'role'];
+  dto.role = Array.isArray(dto.role) ? dto.role[0] : dto.role;
 
-  return {
-    id: +dto.id,
-    email: dto.email,
-    first_name: dto.first_name,
-    last_name: dto.last_name,
-    role: role,
-  }
+  return fields.reduce((prev, next) => {
+    prev[next] = dto[next];
+    return prev;
+  }, {})
 }

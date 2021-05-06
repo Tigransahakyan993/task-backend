@@ -13,6 +13,10 @@ class BaseService {
     return this.Model.findByPk(id)
   }
 
+  getBy(params) {
+    return this.Model.findOne(params)
+  }
+
   create(values) {
     return this.Model.create(values)
   }

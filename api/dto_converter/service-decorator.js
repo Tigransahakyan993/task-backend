@@ -1,4 +1,9 @@
 
+exports.getBy = async (service, converter, params) => {
+    const data = await service.getBy(params);
+    return converter.fromDto(data);
+}
+
 exports.getById = async (service, converter, id) => {
     const data = await service.getById(id);
     return converter.fromDto(data);
@@ -31,6 +36,6 @@ exports.update = async (service, converter, args) => {
     return converter.fromDto(data);
 }
 
-exports.delete = async (service, converter, id) => {
+exports.delete = async (service, id) => {
     return await service.delete(id);
 }

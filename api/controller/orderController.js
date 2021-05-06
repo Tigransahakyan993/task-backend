@@ -19,6 +19,7 @@ exports.getAllOrders = async (req, res) => {
 
 exports.getOrder = async (req, res) => {
   const id = req.id;
+
   try {
     const orders = await serviceDecorator.getById(
       service,

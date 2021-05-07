@@ -2,26 +2,39 @@ const express = require('express');
 const productController = require("../controller/productController");
 const products = express.Router();
 const passport = require('passport');
-// const requireAuth = passport.authenticate('jwt', {session: false});
+const authGuard = require('node-auth-guard');
+const initRoleField = authGuard.initialize({rolesField: 'role'});
+const requireAuth = passport.authenticate('jwt', {session: false});
 
 products.get('/',
-  productController.getAllProducts
+    requireAuth,
+    productController.getAllProducts
 )
 
 products.get('/:id',
-  productController.getProduct
+    requireAuth,
+    productController.getProduct
 )
 
 products.post('/',
-  productController.createProduct
+    requireAuth,
+    initRoleField,
+    authGuard.roles('admin', 'owner'),
+    productController.createProduct
 )
 
 products.put('/:id',
-  productController.updateProduct
+    requireAuth,
+    initRoleField,
+    authGuard.roles('admin', 'owner'),
+    productController.updateProduct
 )
 
 products.delete('/:id',
-  productController.deleteProduct
+    requireAuth,
+    initRoleField,
+    authGuard.roles('admin, owner'),
+    productController.deleteProduct
 )
 
 module.exports = products;

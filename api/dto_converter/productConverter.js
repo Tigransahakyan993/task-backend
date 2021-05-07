@@ -1,10 +1,10 @@
 exports.toDto = (data) => {
 
   return {
-    restaurantId: data.restaurantId,
     name: data.name,
     description: data.description,
     price: data.price,
+    restaurantId: data.restaurantId
   }
 }
 
@@ -17,5 +17,6 @@ exports.fromDto = (dto) => {
     price: dto.price,
     createdAt: dto.createdAt,
     updatedAt: dto.updatedAt,
+    restaurantId: dto.restaurantId,
   }
 }

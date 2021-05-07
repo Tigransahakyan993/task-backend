@@ -23,13 +23,13 @@ app.use(session({ secret: 'SECRET' }));
 app.use(passport.initialize(undefined));
 app.use(passport.session(undefined));
 
+router(app)
 
 //Error handler
 app.use((error, req, res, next) => {
-  console.log(error);
-  return res.status(500).json({ error: error.toString() })
+  console.log('error.message',error.message);
+  console.log('error.statusMessage',error.statusMessage);
+  return res.status(500).json({ message: error.message || error.statusMessage})
 });
-
-router(app)
 
 app.listen(4000);

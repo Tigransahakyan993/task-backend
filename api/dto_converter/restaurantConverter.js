@@ -15,6 +15,7 @@ exports.fromDto = (dto) => {
 
   return {
     id: dto.id,
+    userId: dto.userId,
     name: dto.name,
     description: dto.description,
     products: products.map(item => productConverter.fromDto(item)),

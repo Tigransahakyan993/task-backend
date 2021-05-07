@@ -18,6 +18,10 @@ class RestaurantService extends BaseService{
     return super.update(data, options)
   }
 
+  getBy(params) {
+    return super.getBy(params)
+  }
+
 }
 
 module.exports = RestaurantService;

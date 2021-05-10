@@ -8,11 +8,15 @@ const initFields = authGuard.initialize({rolesField: 'role'});
 
 orders.get('/',
     requireAuth,
+    initFields,
+    authGuard.roles('admin', 'buyer'),
     ordersController.getAllOrders
 )
 
 orders.get('/:id',
     requireAuth,
+    initFields,
+    authGuard.roles('admin', 'buyer'),
     ordersController.getOrder
 )
 

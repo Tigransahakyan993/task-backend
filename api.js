@@ -27,6 +27,7 @@ router(app)
 
 //Error handler
 app.use((error, req, res, next) => {
+  console.log('error',error);
   console.log('error.message',error.message);
   console.log('error.statusMessage',error.statusMessage);
   return res.status(500).json({ message: error.message || error.statusMessage})

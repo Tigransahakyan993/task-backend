@@ -20,6 +20,7 @@ const localLogin = new LocalStrategy(localOptions, async (email, password, done)
     const wrongCredentials = !user || !user.password;
     const passwordMatch = bcrypt.compareSync(password, user.password);
     if (wrongCredentials || !passwordMatch) {
+      console.log('Wrong email or password');
       return done({
         message: 'Wrong email or password',
         statusCode: 401,

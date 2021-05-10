@@ -20,13 +20,14 @@ exports.register = async (req, res) => {
 
   try {
     const user = await serviceDecorator.create(userService, userConverter, data);
-    if (user.role === userRole.owner) {
+
+    if (data.role === userRole.owner) {
       const restaurantData = {
         userId: user.id,
         name: '',
         description: ''
       }
-      const restaurant = await serviceDecorator.create(restaurantService, restaurantConverter, data)
+      await serviceDecorator.create(restaurantService, restaurantConverter, restaurantData);
     }
     const token = jwt.sign({payload: user}, config.jwt.secret);
 
@@ -38,6 +39,6 @@ exports.register = async (req, res) => {
 }
 
 exports.getCurrentUser = (req, res) => {
-  const user = userConverter.fromDto(req.user)
+  const user = userConverter.fromDto(req.user);
   writeStatus(res, 401, {user});
 }

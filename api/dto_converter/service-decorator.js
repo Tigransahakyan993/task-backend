@@ -1,4 +1,9 @@
 
+exports.getBy = async (service, converter, params) => {
+    const data = await service.getBy(params);
+    return converter.fromDto(data);
+}
+
 exports.getById = async (service, converter, id) => {
     const data = await service.getById(id);
     return converter.fromDto(data);
@@ -26,11 +31,11 @@ exports.create = async (service, converter, args) => {
 }
 
 exports.update = async (service, converter, args) => {
-    const dataToDto = converter.toDto(args);
-    const data = await service.update(dataToDto);
+    const dataToDto = converter.toDto(args.data);
+    const data = await service.update({value: dataToDto, options: args.options});
     return converter.fromDto(data);
 }
 
-exports.delete = async (service, converter, id) => {
+exports.delete = async (service, id) => {
     return await service.delete(id);
 }

@@ -13,6 +13,10 @@ class BaseService {
     return this.Model.findByPk(id)
   }
 
+  getBy(params) {
+    return this.Model.findOne(params)
+  }
+
   create(values) {
     return this.Model.create(values)
   }
@@ -21,7 +25,8 @@ class BaseService {
     return this.Model.update(values, options)
   }
 
-  delete(options) {
+  delete(id) {
+    const options = {where: {id}}
     return this.Model.destroy(options)
   }
 }

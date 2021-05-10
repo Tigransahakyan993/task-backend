@@ -31,8 +31,8 @@ exports.create = async (service, converter, args) => {
 }
 
 exports.update = async (service, converter, args) => {
-    const dataToDto = converter.toDto(args);
-    const data = await service.update(dataToDto);
+    const dataToDto = converter.toDto(args.data);
+    const data = await service.update({value: dataToDto, options: args.options});
     return converter.fromDto(data);
 }
 

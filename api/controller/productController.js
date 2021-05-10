@@ -1,5 +1,5 @@
-const ProductService = require('../servise/ProductService')
-const RestaurantService = require('../servise/RestaurantService')
+const ProductService = require('../servise/ProductService');
+const RestaurantService = require('../servise/RestaurantService');
 const service = new ProductService();
 const restaurantService = new RestaurantService();
 const converter = require('../dto_converter/productConverter');
@@ -7,7 +7,8 @@ const restaurantConverter = require('../dto_converter/restaurantConverter');
 const paramsConverter = require('../dto_converter/paramsConverter');
 const serviceDecorator = require('../dto_converter/service-decorator');
 const { writeStatus } = require('../../utils');
-const {userRole} = require('../../config')
+
+const {userRole} = require('../../config');
 
 exports.getAllProducts = async (req, res) => {
   const {restaurantId} = req.query;
@@ -47,15 +48,18 @@ exports.createProduct = async (req, res) => {
   const user = req.user;
   const data = req.body;
 
-  if (user.role === userRole.owner) {
-    const params = {where: {userId: user.id}};
-    const userRestaurant = await serviceDecorator.getBy(restaurantService, restaurantConverter, params)
-    data.restaurantId = userRestaurant.id;
-  }
-
   try {
-    const product = await serviceDecorator.create(service, converter, data);
-    writeStatus(res, 200, product)
+    if (user.role.includes(userRole.owner)) {
+      const params = {where: {userId: user.id}};
+      const userRestaurant = await serviceDecorator.getBy(restaurantService, restaurantConverter, params);
+      if (!userRestaurant) {
+          return writeStatus(res, 401, {message: 'You have not restaurant'})
+        }
+      data.restaurantId = +userRestaurant.id;
+    }
+
+      const product = await serviceDecorator.create(service, converter, data);
+      writeStatus(res, 200, product)
   }catch (e) {
     console.log(e);
     writeStatus(res, 401, {message: 'Something want wrong'})
@@ -66,13 +70,14 @@ exports.updateProduct = async (req, res) => {
   const user = req.user;
   const data = req.body;
   const options = {where: {id: req.params.id}};
+  const id = req.params.id;
 
   try {
-
-    if (user.role === userRole.owner) {
+    if (user.role.includes(userRole.owner)) {
       const params = {where: {userId: user.id}};
       const userRestaurant = await serviceDecorator.getBy(restaurantService, restaurantConverter, params);
-      const product = await service.getById(data.id)
+      const product = await service.getById(id)
+
       if (+userRestaurant.id !== +product.restaurantId) {
         return writeStatus(res, 400, {message: 'Permission denied'})
       }
@@ -92,7 +97,7 @@ exports.deleteProduct = async (req, res) => {
 
   try {
 
-    if (user.role === userRole.owner) {
+    if (user.role.includes(userRole.owner)) {
       const params = {where: {userId: user.id}};
       const userRestaurant = await serviceDecorator.getBy(restaurantService, restaurantConverter, params);
       const product = await service.getById(id)

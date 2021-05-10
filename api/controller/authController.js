@@ -20,7 +20,8 @@ exports.register = async (req, res) => {
 
   try {
     const user = await serviceDecorator.create(userService, userConverter, data);
-    if (user.role === userRole.owner) {
+
+    if (data.role === userRole.owner) {
       const restaurantData = {
         userId: user.id,
         name: '',

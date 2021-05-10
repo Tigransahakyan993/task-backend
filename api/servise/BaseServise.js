@@ -25,7 +25,8 @@ class BaseService {
     return this.Model.update(values, options)
   }
 
-  delete(options) {
+  delete(id) {
+    const options = {where: {id}}
     return this.Model.destroy(options)
   }
 }

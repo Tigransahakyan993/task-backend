@@ -8,4 +8,5 @@ const Restaurant = require('../model/Restaurant')
 // User.drop()
 // OrderItems.drop()
 // Order.drop()
+// Restaurant.drop()
 

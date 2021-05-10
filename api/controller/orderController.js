@@ -1,12 +1,12 @@
 const OrderService = require('../servise/OrderService');
-const OrderItems = require('../model/OrderItems');
+const paramsConverter = require('../dto_converter/paramsConverter');
 const service = new OrderService();
 const serviceDecorator = require('../dto_converter/service-decorator');
 const converter = require('../dto_converter/orderConverter');
 const {writeStatus} = require("../../utils");
 
 exports.getAllOrders = async (req, res) => {
-  const params = req.query;
+  const params = paramsConverter.toDto(req.query);
 
   try {
     const orders = await serviceDecorator.getAll(service, converter, params);
@@ -46,7 +46,6 @@ exports.createOrder = async (req, res) => {
   } catch (e) {
     console.log(e);
   }
-
 }
 
 exports.updateRestaurant = async () => {

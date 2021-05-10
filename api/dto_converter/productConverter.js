@@ -4,6 +4,7 @@ exports.toDto = (data) => {
     name: data.name,
     description: data.description,
     price: data.price,
+    restaurantId: data.restaurantId
   }
 }
 

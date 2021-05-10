@@ -19,8 +19,8 @@ products.get('/:id',
 products.post('/',
     requireAuth,
     initRoleField,
-    authGuard.roles('admin, owner'),
-  productController.createProduct
+    authGuard.roles('admin', 'owner'),
+    productController.createProduct
 )
 
 products.put('/:id',

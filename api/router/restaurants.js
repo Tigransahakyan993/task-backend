@@ -8,15 +8,11 @@ const initFields = authGuard.initialize({rolesField: 'role'});
 
 restaurants.get('/',
   requireAuth,
-  initFields,
-  authGuard.roles('admin', 'owner', 'buyer'),
   restaurantsController.getAllRestaurants
 )
 
 restaurants.get('/:id',
   requireAuth,
-  initFields,
-  authGuard.roles('admin', 'owner', 'buyer'),
   restaurantsController.getRestaurant
 )
 
@@ -37,7 +33,7 @@ restaurants.put('/:id',
 restaurants.delete('/:id',
   requireAuth,
   initFields,
-  authGuard.roles('admin'),
+  authGuard.roles('admin', 'owner'),
   restaurantsController.deleteRestaurant
 )
 

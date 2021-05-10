@@ -1,17 +1,40 @@
 const express = require('express');
-const orderController = require("../controller/orderController");
-const order = express.Router();
+const passport = require('passport');
+const authGuard = require('node-auth-guard');
+const orders = express.Router();
+const ordersController = require("../controller/orderController");
+const requireAuth = passport.authenticate('jwt', {session: false});
+const initFields = authGuard.initialize({rolesField: 'role'});
 
-order.get('/',
-  orderController.getAllOrders,
+orders.get('/',
+    requireAuth,
+    ordersController.getAllOrders
 )
 
-order.get('/:id',
-  orderController.getOrder
+orders.get('/:id',
+    requireAuth,
+    ordersController.getOrder
 )
 
-order.post('/',
-  orderController.createOrder
+orders.post('/',
+    requireAuth,
+    initFields,
+    authGuard.roles('admin', 'buyer'),
+    ordersController.createOrder
 )
 
-module.exports = order;
+orders.put('/:id',
+    requireAuth,
+    initFields,
+    authGuard.roles('admin', 'buyer'),
+    ordersController.updateOrder
+)
+
+orders.delete('/:id',
+    requireAuth,
+    initFields,
+    authGuard.roles('admin', 'buyer'),
+    ordersController.deleteOrder
+)
+
+module.exports = orders;

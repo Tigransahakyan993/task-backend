@@ -22,7 +22,7 @@ exports.convertAll = async (data, converter) => {
 }
 
 exports.create = async (service, converter, args) => {
-    const dataToDto = converter.toDto(args);
+    const dataToDto = converter.toDto(args, 'create');
     const data = await service.create(dataToDto, 'create');
     return converter.fromDto(data);
 }

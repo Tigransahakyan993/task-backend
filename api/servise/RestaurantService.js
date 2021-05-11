@@ -17,11 +17,6 @@ class RestaurantService extends BaseService{
     options.where = {id: data.id}
     return super.update(data, options)
   }
-
-  getBy(params) {
-    return super.getBy(params)
-  }
-
 }
 
 module.exports = RestaurantService;

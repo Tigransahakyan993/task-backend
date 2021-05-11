@@ -6,18 +6,15 @@ exports.getBy = async (service, converter, params) => {
 
 exports.getById = async (service, converter, id) => {
     const data = await service.getById(id);
-    return converter.fromDto(data);
+    return data ? converter.fromDto(data) : {};
 }
 
 exports.getAll = async (service, converter, args) => {
-    const data = service.getAll(args);
-    return exports.convertAll(data, converter)
+    const data = await service.getAll(args);
+    return data ? exports.convertAll(data, converter) : exports.convertAll({}, converter)
 }
 
 exports.convertAll = async (data, converter) => {
-    if (data instanceof Promise) {
-        data = await data;
-    }
     if (!Array.isArray(data.rows)) {
         throw "Data should be array";
     }

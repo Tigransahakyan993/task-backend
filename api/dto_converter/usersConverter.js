@@ -16,7 +16,10 @@ exports.toDto = (data) => {
 exports.fromDto = (dto) => {
   const fields = ['id', 'email', 'first_name', 'last_name', 'role'];
   dto.role = Array.isArray(dto.role) ? dto.role[0] : dto.role;
-
+  if (dto.role === userRole.owner) {
+    fields.push('restaurantId');
+    dto.restaurantId = dto.restaurants[0].id;
+  }
   return fields.reduce((prev, next) => {
     prev[next] = dto[next];
     return prev;

@@ -8,6 +8,7 @@ const session = require('express-session');
 const app = express();
 const router = require('./api/router');
 const {initDb} = require('./api/init/dbInit');
+const {writeStatus} = require('./utils')
 
 initDb()
 
@@ -27,10 +28,8 @@ router(app)
 
 //Error handler
 app.use((error, req, res, next) => {
-  console.log('error',error);
-  console.log('error.message',error.message);
-  console.log('error.statusMessage',error.statusMessage);
-  return res.status(500).json({ message: error.message || error.statusMessage})
+  const message = error.message || error.statusMessage
+  return writeStatus(res, true, message);
 });
 
 app.listen(4000);

@@ -13,7 +13,7 @@ const {userRole} = config;
 exports.logIn = async (req, res) => {
   const token = jwt.sign({payload: req.user}, 'secret');
   const user = userConverter.fromDto(req.user);
-  writeStatus(res, 200, {user, token});
+  writeStatus(res, false, {user, token});
 }
 
 exports.register = async (req, res) => {
@@ -32,14 +32,14 @@ exports.register = async (req, res) => {
     }
     const token = jwt.sign({payload: user}, config.jwt.secret);
 
-    writeStatus(res, 200, {token, user});
+    writeStatus(res, false, {token, user});
   } catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: e.message});
+    writeStatus(res, true, {status: 401, message: e.message});
   }
 }
 
 exports.getCurrentUser = (req, res) => {
   const user = userConverter.fromDto(req.user);
-  writeStatus(res, 401, {user});
+  writeStatus(res, false, {user});
 }

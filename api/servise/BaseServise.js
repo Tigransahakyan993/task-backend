@@ -21,7 +21,7 @@ class BaseService {
     return this.Model.create(values)
   }
 
-  update(values, options) {
+  update({values, options}) {
     return this.Model.update(values, options)
   }
 

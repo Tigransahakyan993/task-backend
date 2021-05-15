@@ -11,11 +11,10 @@ exports.getUser = async (req, res) => {
     const id = req.params.id;
     const requestedUser = await serviceDecorator.getById(userService, converter, id);
 
-      writeStatus(res, 200, {user: requestedUser});
+      writeStatus(res, false, {user: requestedUser});
 
   } catch (e) {
-    console.log(e.message);
-    writeStatus(res, 401, {message: e.message});
+    writeStatus(res, true, {status: 400, message: e.message});
   }
 }
 
@@ -23,16 +22,16 @@ exports.getAllUsers = async (req, res) => {
   const params = paramsConverter.toDto(req.query);
 
   const users = await serviceDecorator.getAll(userService, converter, params);
-    writeStatus(res, 200, users);
+    writeStatus(res, false, users);
 }
 
 exports.createUser = async (req, res) => {
   try {
     const data = req.body;
     const user = await serviceDecorator.create(userService, converter, data);
-    writeStatus(res, 200, user);
+    writeStatus(res, false, user);
   } catch (e) {
-    writeStatus(res, 401, {message: e.message});
+    writeStatus(res, true, {status: 400, message: e.message});
   }
 }
 
@@ -40,12 +39,12 @@ exports.getCurrentUser = async (req, res) => {
   try {
     const { user } = req;
     if (!user) {
-      writeStatus(res, 401, {message: 'Unauthorized'});
+      writeStatus(res, true, {status: 400, message: 'Unauthorized'});
       return;
     }
-    writeStatus(res, 200, {user: req.user});
+    writeStatus(res, false, {user: req.user});
 
   } catch (e) {
-    writeStatus(res, 401, {message: e.message})
+    writeStatus(res, true, {status: 400, message: e.message})
   }
 }

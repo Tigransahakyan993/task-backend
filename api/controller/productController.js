@@ -13,7 +13,7 @@ exports.getAllProducts = async (req, res) => {
   const {restaurantId} = req.query;
   const params = paramsConverter.toDto(req.query)
   if (+restaurantId) {
-    params.where = {restaurantId}
+    params.where = {restaurantId: +restaurantId}
   }
 
   try {
@@ -22,10 +22,10 @@ exports.getAllProducts = async (req, res) => {
       converter,
       params
     );
-    writeStatus(res, 200, products)
+    writeStatus(res, false, products)
   } catch (e) {
     console.log(e)
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {message: 'Something want wrong'})
   }
 }
 
@@ -34,12 +34,11 @@ exports.getProduct = async (req, res) => {
 
   try {
     const product = await serviceDecorator.getById(service, converter, id);
-    console.log(product);
-    writeStatus(res, 200, product)
+    writeStatus(res, false, product)
   }
   catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {message: 'Something want wrong'})
   }
 }
 
@@ -52,16 +51,16 @@ exports.createProduct = async (req, res) => {
       const params = {where: {userId: user.id}};
       const userRestaurant = await serviceDecorator.getBy(restaurantService, restaurantConverter, params);
       if (!userRestaurant) {
-          return writeStatus(res, 401, {message: 'You have not restaurant'})
+          return writeStatus(res, true, {message: 'You have not restaurant'})
         }
       data.restaurantId = +userRestaurant.id;
     }
 
       const product = await serviceDecorator.create(service, converter, data);
-      writeStatus(res, 200, product)
+      writeStatus(res, false, product)
   }catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {message: 'Something want wrong'})
   }
 }
 
@@ -78,15 +77,15 @@ exports.updateProduct = async (req, res) => {
       const product = await service.getById(id)
 
       if (+userRestaurant.id !== +product.restaurantId) {
-        return writeStatus(res, 400, {message: 'Permission denied'})
+        return writeStatus(res, true, {message: 'Permission denied'})
       }
     }
 
       const product = await serviceDecorator.update(service, converter, {data, options});
-      writeStatus(res, 200, product)
+      writeStatus(res, false, product)
   } catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {message: 'Something want wrong'})
   }
 }
 
@@ -100,16 +99,16 @@ exports.deleteProduct = async (req, res) => {
       const userRestaurant = await serviceDecorator.getBy(restaurantService, restaurantConverter, params);
       const product = await service.getById(id)
       if (+userRestaurant.id !== +product.restaurantId) {
-        return writeStatus(res, 400, {message: 'Permission denied'})
+        return writeStatus(res, true, {status: 403, message: 'Permission denied'})
       }
     }
 
     const product = await serviceDecorator.delete(service, id);
     if (product) {
-          return writeStatus(res, 200, {message: 'Product deleted successful'});
+          return writeStatus(res, false, {message: 'Product deleted successful'});
         }
   } catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {message: 'Something want wrong'})
   }
 }

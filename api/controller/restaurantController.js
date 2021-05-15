@@ -17,9 +17,9 @@ exports.getAllRestaurants = async (req, res) => {
     );
     // TODO: don't forget change writeStatus( *data* -> *restaurants* )
     const restaurants = data.filter(restaurant => restaurant.products.length)
-    writeStatus(res, 200, data)
+    writeStatus(res, false, data)
   } catch (e) {
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {status: 400, message: 'Something want wrong'})
   }
 }
 
@@ -28,11 +28,11 @@ exports.getRestaurant = async (req, res) => {
 
   try {
     const restaurant = await serviceDecorator.getById(service, converter, id);
-    writeStatus(res, 200, restaurant)
+    writeStatus(res, false, restaurant)
   }
   catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {status: 400, message: 'Something want wrong'})
   }
 }
 
@@ -46,17 +46,17 @@ exports.createRestaurant = async (req, res) => {
       const userRestaurant = await service.getBy({where: {userId}});
 
       if (userRestaurant) {
-        return writeStatus(res, 200, {message: 'Restaurant such exist'})
+        return writeStatus(res, false, {status: 405, message: 'Restaurant such exist'})
       }
       const restaurant = await serviceDecorator.create(service, converter, {...data, userId});
-      return writeStatus(res, 200, restaurant)
+      return writeStatus(res, false, {restaurant})
     }
 
     const restaurant = await serviceDecorator.create(service, converter, data);
-    writeStatus(res, 200, restaurant)
+    writeStatus(res, false, {restaurant})
   }catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {status: 400, message: 'Something want wrong'})
   }
 }
 
@@ -69,19 +69,20 @@ exports.updateRestaurant = async (req, res) => {
     if (user.role.includes(userRole.owner)) {
       options.where = {userId: req.user.id}
       const userRestaurant = await service.getBy(options);
+
       if (!userRestaurant) {
-        return writeStatus(res, 400, {message: 'Bad request'})
+        return writeStatus(res, true, {status: 405, message: 'You have not Restaurant'})
       }
       const restaurant = await serviceDecorator.update(service, converter, {data, options});
-      return writeStatus(res, 200, restaurant)
+      return writeStatus(res, false, {status: 200, message: 'Restaurant updated successful'})
     }
 
     options.where = {id: data.restaurantId}
     const restaurant = await serviceDecorator.update(service, converter, {data, options});
-    writeStatus(res, 200, restaurant)
+    writeStatus(res, false, restaurant)
   }catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {status: 400, message: 'Something want wrong'})
   }
 }
 
@@ -95,25 +96,25 @@ exports.deleteRestaurant = async (req, res) => {
       const userRestaurant = await service.getBy({where: {userId: req.user.id}});
 
       if (!userRestaurant) {
-        return writeStatus(res, 401, {message: "You have not Restaurants"})
+        return writeStatus(res, true, {status: 405, message: "You have not Restaurants"})
       }
 
       if (+userRestaurant.id !== +id) {
-        return writeStatus(res, 401, {message: "You can't change other's Restaurants"})
+        return writeStatus(res, true, {status: 403, message: "You can't change other's Restaurants"})
       }
 
       const restaurant = await serviceDecorator.delete(service, id);
-      return writeStatus(res, 200, restaurant)
+      return writeStatus(res, false, restaurant)
     }
 
     const restaurant = await serviceDecorator.delete(service, id);
     if (restaurant) {
-     return writeStatus(res, 200, {message: 'Restaurants deleted successful'})
+     return writeStatus(res, false, {status: 200, message: 'Restaurants deleted successful'})
     }
-    writeStatus(res, 200, {message: 'Can not delete Restaurant'})
+    writeStatus(res, false, {status: 400, message: 'Can not delete Restaurant'})
   }
   catch (e) {
     console.log(e);
-    writeStatus(res, 401, {message: 'Something want wrong'})
+    writeStatus(res, true, {status: 400, message: 'Something want wrong'})
   }
 }

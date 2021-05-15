@@ -11,12 +11,6 @@ class RestaurantService extends BaseService{
     params.include = [{model: Product, as: 'products', limit: 7}];
     return super.getAll(params);
   }
-
-  update(data) {
-    const options = {};
-    options.where = {id: data.id}
-    return super.update(data, options)
-  }
 }
 
 module.exports = RestaurantService;

@@ -13,18 +13,18 @@ class OrderService extends BaseService{
       return Order.findOne({include: {model: OrderItems, as: 'orderItems'}})
     }
 
-    getAll(params) {
-    params.include = {model: OrderItems, as: 'orderItems'}
-      super.getAll(params)
+    async getAll(params) {
+      params.include = {model: OrderItems, as: 'orderItems'}
+      return super.getAll(params)
     }
 
-  async create({orderItems, restaurantId, price, status}) {
+  async create({orderItems, restaurantId, price, status, userId}) {
     const orderItemsIds = orderItems.map(item => item.productId);
     const restaurantItems = await this.productService.getAll({where: {id: orderItemsIds}});
     if (restaurantItems.rows.length !== orderItemsIds.length) {
       throw new Error('some ids are invalid');
     }
-    const newOrder = await super.create({restaurantId, price: 150, status});
+    const newOrder = await super.create({restaurantId, price: 150, status, userId});
     orderItems.forEach(item => {
       item.orderId = newOrder.id;
     });

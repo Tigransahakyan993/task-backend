@@ -7,7 +7,6 @@ const restaurantConverter = require('../dto_converter/restaurantConverter');
 const paramsConverter = require('../dto_converter/paramsConverter');
 const serviceDecorator = require('../dto_converter/service-decorator');
 const { writeStatus } = require('../../utils');
-
 const {userRole} = require('../../config');
 
 exports.getAllProducts = async (req, res) => {
@@ -96,7 +95,6 @@ exports.deleteProduct = async (req, res) => {
   const id = req.params.id;
 
   try {
-
     if (user.role.includes(userRole.owner)) {
       const params = {where: {userId: user.id}};
       const userRestaurant = await serviceDecorator.getBy(restaurantService, restaurantConverter, params);

@@ -7,6 +7,7 @@ exports.toDto = (data, create) => {
   }
   return {
     restaurantId: data.restaurantId,
+    userId: data.userId,
     orderItems: data.orderItems.map(item => orderItemsConverter.toDto(item)),
     price: data.price,
     status: data.status,
@@ -18,6 +19,7 @@ exports.fromDto = (dto) => {
 
   return {
     id: dto.id,
+    userId: dto.userId,
     status: dto.status,
     price: dto.price,
     orderItems: dto.orderItems.map(item => orderItemsConverter.fromDto(item)),

@@ -21,7 +21,7 @@ exports.getAllOrders = async (req, res) => {
     }
 
     const orders = await serviceDecorator.getAll(service, converter, params);
-    writeStatus(res, 200, orders)
+    writeStatus(res, 200, {orders})
   } catch (e) {
     console.log('Error : ',e)
     writeStatus(res, 401, {message: 'Something want wrong'})
@@ -46,6 +46,7 @@ exports.getOrder = async (req, res) => {
 
 exports.createOrder = async (req, res) => {
   const data = req.body;
+  data.userId = req.user.id;
 
   try{
     const order = await serviceDecorator.create(service, converter, data);
@@ -53,7 +54,7 @@ exports.createOrder = async (req, res) => {
       writeStatus(res, 403, {status: 403, message: 'something went wrong'});
       return
     }
-    writeStatus(res, 200, order);
+    writeStatus(res, 200, {order});
   } catch (e) {
     console.log(e);
   }

@@ -26,7 +26,7 @@ products.post('/',
 products.put('/:id',
     requireAuth,
     initRoleField,
-    authGuard.roles('admin, owner'),
+    authGuard.roles('admin', 'owner'),
     productController.updateProduct
 )
 

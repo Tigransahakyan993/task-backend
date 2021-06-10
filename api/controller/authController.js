@@ -13,7 +13,7 @@ const {userRole} = config;
 exports.logIn = async (req, res) => {
   const token = jwt.sign({payload: req.user}, 'secret');
   const user = userConverter.fromDto(req.user);
-  writeStatus(res, false, {user, token});
+  writeStatus(res, false, {data: user, token});
 }
 
 exports.register = async (req, res) => {
@@ -41,5 +41,5 @@ exports.register = async (req, res) => {
 
 exports.getCurrentUser = (req, res) => {
   const user = userConverter.fromDto(req.user);
-  writeStatus(res, false, {user});
+  writeStatus(res, false, {data: user});
 }

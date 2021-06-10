@@ -5,7 +5,7 @@ const service = new OrderService();
 const restaurantService = new RestaurantService();
 const serviceDecorator = require('../dto_converter/service-decorator');
 const converter = require('../dto_converter/orderConverter');
-const {userRole} = require('../../config')
+const {userRole} = require('../../config');
 const {writeStatus} = require("../../utils");
 
 exports.getAllOrders = async (req, res) => {
@@ -20,24 +20,35 @@ exports.getAllOrders = async (req, res) => {
       params.where = {restaurantId: ownerRestaurant.id}
     }
 
-    const orders = await serviceDecorator.getAll(service, converter, params);
-    writeStatus(res, false, {orders})
+    const data = await serviceDecorator.getAll(service, converter, params);
+    writeStatus(res, false, {...data})
   } catch (e) {
-    console.log(e)
     writeStatus(res, true, {status: 400, message: e.message})
   }
 }
 
 exports.getOrder = async (req, res) => {
-  const id = req.id;
-
+  const user = req.user;
+  const params = paramsConverter.toDto(req.query);
+  params.where = {id: +req.params.id};
+  console.log(params);
   try {
-    const orders = await serviceDecorator.getById(
+    const order = await serviceDecorator.getBy(
       service,
       converter,
-      id
+      params
     );
-    writeStatus(res, false, {orders})
+    if (user.role.includes(userRole.buyer)) {
+      if (+user.id !== +order.userId) {
+        return writeStatus(res, true, {message: 'Permission denied'})
+      }
+    }
+    if (user.role.includes(userRole.owner)) {
+      if (+user.restaurants[0].id !== +order.restaurantId) {
+        return writeStatus(res, false, {message: 'Permission denied'})
+      }
+    }
+    writeStatus(res, false, {orders: order})
   } catch (e) {
     console.log(e)
     writeStatus(res, true, {status: 400, message: 'Something want wrong'})
@@ -50,16 +61,27 @@ exports.createOrder = async (req, res) => {
 
   try{
     const order = await serviceDecorator.create(service, converter, data);
-    writeStatus(res, false, {order});
+    writeStatus(res, false, {data: order});
   } catch (err) {
     writeStatus(res, true, {status: 400, message: 'Something want wrong'});
   }
 }
 
-exports.updateOrder = async () => {
+exports.changeOrderStatus = async (req, res) => {
+  const {id} = req.body;
+  const user = req.user;
+  const options = {
+      user
+  };
 
-}
-
-exports.deleteOrder = async (req, res) => {
-
+  try {
+    const changed = await serviceDecorator.update(service, converter, {data: {id}, options});
+    if (changed) {
+     return writeStatus(res, false, {message: 'Status updated successful'});
+    }
+    writeStatus(res, false, {message: "You can't update order status"})
+  } catch (e) {
+    console.log('ERROR:::',e);
+    writeStatus(res, true, {status: 400, message: e.message});
+  }
 }

@@ -8,7 +8,7 @@ module.exports = {
     placed: 'placed',
     canceled: 'canceled',
     processing: 'processing',
-    inRout: 'inRout',
+    inRoute: 'inRoute',
     delivered: 'delivered',
     received: 'received'
   },

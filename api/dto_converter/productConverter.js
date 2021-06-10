@@ -1,5 +1,4 @@
 exports.toDto = (data) => {
-
   return {
     name: data.name,
     description: data.description,

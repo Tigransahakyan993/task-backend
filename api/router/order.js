@@ -9,14 +9,14 @@ const initFields = authGuard.initialize({rolesField: 'role'});
 orders.get('/',
     requireAuth,
     initFields,
-    authGuard.roles('admin', 'buyer'),
+    authGuard.roles('admin', 'owner', 'buyer'),
     ordersController.getAllOrders
 )
 
 orders.get('/:id',
     requireAuth,
     initFields,
-    authGuard.roles('admin', 'buyer'),
+    authGuard.roles('admin', 'owner', 'buyer'),
     ordersController.getOrder
 )
 
@@ -27,18 +27,11 @@ orders.post('/',
     ordersController.createOrder
 )
 
-orders.put('/:id',
+orders.post('/changeOrderStatus',
     requireAuth,
     initFields,
-    authGuard.roles('admin', 'buyer'),
-    ordersController.updateOrder
-)
-
-orders.delete('/:id',
-    requireAuth,
-    initFields,
-    authGuard.roles('admin', 'buyer'),
-    ordersController.deleteOrder
+    authGuard.roles('admin', 'owner', 'buyer'),
+    ordersController.changeOrderStatus
 )
 
 module.exports = orders;

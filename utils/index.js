@@ -4,5 +4,5 @@ exports.writeStatus = (res, err, data) => {
     const message = data.message || 'Something went wrong';
     return res.status(status).json({data: {message}})
   }
-  res.status(200).json({ data })
+  res.status(200).json({ ...data })
 }

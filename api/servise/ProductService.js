@@ -7,10 +7,8 @@ class ProductService extends BaseService{
   }
 
   update(args) {
-    const {value, options} = args;
-    console.log('value', value);
-    console.log('options', options);
-    return super.update(value, options);
+    const {values, options} = args;
+    return super.update({values, options});
   }
 }
 

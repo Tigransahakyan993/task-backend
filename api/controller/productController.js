@@ -1,6 +1,6 @@
 const ProductService = require('../servise/ProductService');
-const RestaurantService = require('../servise/RestaurantService');
 const service = new ProductService();
+const RestaurantService = require('../servise/RestaurantService');
 const restaurantService = new RestaurantService();
 const converter = require('../dto_converter/productConverter');
 const restaurantConverter = require('../dto_converter/restaurantConverter');
@@ -22,7 +22,7 @@ exports.getAllProducts = async (req, res) => {
       converter,
       params
     );
-    writeStatus(res, false, products)
+    writeStatus(res, false, {data: products.data, count: products.count})
   } catch (e) {
     console.log(e)
     writeStatus(res, true, {message: 'Something want wrong'})
@@ -34,7 +34,7 @@ exports.getProduct = async (req, res) => {
 
   try {
     const product = await serviceDecorator.getById(service, converter, id);
-    writeStatus(res, false, product)
+    writeStatus(res, false, {data: product})
   }
   catch (e) {
     console.log(e);
@@ -67,8 +67,8 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   const user = req.user;
   const data = req.body;
-  const options = {where: {id: req.params.id}};
-  const id = req.params.id;
+  const id = +req.params.id;
+  const options = {where: {id: id}};
 
   try {
     if (user.role.includes(userRole.owner)) {

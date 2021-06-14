@@ -1,11 +1,10 @@
-
 exports.getBy = async (service, converter, params) => {
     const data = await service.getBy(params);
     return converter.fromDto(data);
 }
 
 exports.getById = async (service, converter, id) => {
-    const data = await service.getById(id);
+    const data = await service.getById(+id);
     return data ? converter.fromDto(data) : {};
 }
 
@@ -18,7 +17,7 @@ exports.convertAll = async (data, converter) => {
     if (!Array.isArray(data.rows)) {
         throw "Data should be array";
     }
-    return data.rows.map((item) => converter.fromDto(item))
+    return {data: data.rows.map((item) => converter.fromDto(item)), count: data.count}
 }
 
 exports.create = async (service, converter, args) => {
@@ -29,8 +28,7 @@ exports.create = async (service, converter, args) => {
 
 exports.update = async (service, converter, args) => {
     const dataToDto = converter.toDto(args.data);
-    const data = await service.update({values: dataToDto, options: args.options});
-    return converter.fromDto(data);
+    return await service.update({values: dataToDto, options: args.options});
 }
 
 exports.delete = async (service, id) => {

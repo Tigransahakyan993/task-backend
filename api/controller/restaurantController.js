@@ -4,7 +4,7 @@ const converter = require('../dto_converter/restaurantConverter');
 const paramsConverter = require('../dto_converter/paramsConverter');
 const serviceDecorator = require('../dto_converter/service-decorator');
 const { writeStatus } = require('../../utils');
-const {userRole} = require('../../config')
+const {userRole} = require('../../config');
 
 exports.getAllRestaurants = async (req, res) => {
   const params = paramsConverter.toDto(req.query);
@@ -16,7 +16,7 @@ exports.getAllRestaurants = async (req, res) => {
       params
     );
     // TODO: don't forget change writeStatus( *data* -> *restaurants* )
-    const restaurants = data.filter(restaurant => restaurant.products.length)
+    // const restaurants = data.filter(restaurant => restaurant.products.length)
     writeStatus(res, false, data)
   } catch (e) {
     writeStatus(res, true, {status: 400, message: 'Something want wrong'})
@@ -28,7 +28,7 @@ exports.getRestaurant = async (req, res) => {
 
   try {
     const restaurant = await serviceDecorator.getById(service, converter, id);
-    writeStatus(res, false, restaurant)
+    writeStatus(res, false, {data: restaurant})
   }
   catch (e) {
     console.log(e);

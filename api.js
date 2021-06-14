@@ -28,8 +28,8 @@ router(app)
 
 //Error handler
 app.use((error, req, res, next) => {
-  const message = error.message || error.statusMessage
-  return writeStatus(res, true, message);
+  const message = error.message || error.statusMessage;
+  return writeStatus(res, true, {message});
 });
 
 app.listen(4000);

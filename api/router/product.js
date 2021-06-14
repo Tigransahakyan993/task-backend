@@ -33,7 +33,7 @@ products.put('/:id',
 products.delete('/:id',
     requireAuth,
     initRoleField,
-    authGuard.roles('admin, owner'),
+    authGuard.roles('admin', 'owner'),
     productController.deleteProduct
 )
 
